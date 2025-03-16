@@ -1,9 +1,21 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.3.9"
+    /**
+     * System.getProperties
+     * - 자바에서 시스템 속성을 가져오는 메서드
+     * - JVM이 시작할 때 설정된 시스템 속성 반환
+     * - 시스템 정보, 환경 변수
+     */
+    val kotlinVersion: String by System.getProperties()
+    val springBootVersion: String by System.getProperties()
+
+    println("코틀린 버전 : $kotlinVersion")
+    kotlin("jvm") version kotlinVersion // 코틀린 컴파일러 버전
+    kotlin("plugin.spring") version kotlinVersion //
+    kotlin("plugin.jpa") version kotlinVersion
+
+    println("스프링부트 버전 : $springBootVersion")
+    id("org.springframework.boot") version springBootVersion
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "1.9.25"
 }
 
 group = "com.bgpark.demo"
@@ -11,7 +23,9 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        val javaVersion: String by System.getProperties()
+        println("자바 버전 : $javaVersion")
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
 }
 
