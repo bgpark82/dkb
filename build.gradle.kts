@@ -41,6 +41,9 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.1") // JUnit5 기반 실행기
+    testImplementation("io.kotest:kotest-assertions-core:5.8.1") // 기본 assertion
+    testImplementation("io.kotest:kotest-framework-engine:5.8.1") // Kotest 내부 엔진
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
