@@ -45,6 +45,17 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:5.8.1") // 기본 assertion
     testImplementation("io.kotest:kotest-framework-engine:5.8.1") // Kotest 내부 엔진
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Cucumber Dependencies
+    testImplementation("io.cucumber:cucumber-java:7.18.0")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.18.0") // For JUnit Platform runner
+    testImplementation("io.cucumber:cucumber-spring:7.18.0") // For Spring integration in Cucumber
+
+    // RestAssured for API Testing
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
+    testImplementation("io.rest-assured:json-path:5.4.0") // For easily parsing JSON responses
+    testRuntimeOnly("org.junit.platform:junit-platform-suite") // For Cucumber runner
+
 }
 
 kotlin {
