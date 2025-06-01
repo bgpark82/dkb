@@ -1,4 +1,4 @@
-package com.bgpark.demo.dkb.api.cucumber
+package com.bgpark.demo.dkb.api.e2e.cucumber
 
 import io.cucumber.core.options.Constants.GLUE_PROPERTY_NAME
 import io.cucumber.core.options.Constants.PLUGIN_PROPERTY_NAME
@@ -34,7 +34,7 @@ import org.junit.platform.suite.api.Suite
 *  - Cucumber가 .feature을 읽어서 실행할 때 Step Definition이 어디 있는지 알려줌 (Given -> @Given)
 * Cucumber가 StepDefinition, Hooks, Context 설정 클래스 찾을 때 패키지 경로 명시
  */
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.bgpark.demo.dkb.api.steps, com.bgpark.demo.dkb.api.cucumber")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.bgpark.demo.dkb.api.e2e.cucumber.steps, com.bgpark.demo.dkb.api.e2e")
 /**
 * CUCUMBER_PLUGIN: "cucumber.plugin"
 * PLUGIN: 테스트 결과를 다양한 형식으로 출력하는 확장기능

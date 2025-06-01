@@ -1,9 +1,10 @@
-package com.bgpark.demo.dkb.api.cucumber
+package com.bgpark.demo.dkb.api.e2e
 
 import io.restassured.response.Response
 import org.springframework.stereotype.Component
 
 /**
+ * IMPORTANT: Serenity 테스트에도 설정이 필요하다
  * Share `response` object received from RestAssured between When and Then steps
  * ApiTestContext will store the response from RestAssured
  * Each step methods from Cucumber are executed separately

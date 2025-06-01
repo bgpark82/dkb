@@ -1,7 +1,7 @@
-package com.bgpark.demo.dkb.api.steps
+package com.bgpark.demo.dkb.api.e2e.cucumber.steps
 
-import com.bgpark.demo.dkb.api.cucumber.ApiTestContext
-import com.bgpark.demo.dkb.api.cucumber.CucumberSpringConfiguration
+import com.bgpark.demo.dkb.api.e2e.ApiTestContext
+import com.bgpark.demo.dkb.api.e2e.CucumberSpringConfiguration
 import com.bgpark.demo.dkb.api.user.UserService
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
