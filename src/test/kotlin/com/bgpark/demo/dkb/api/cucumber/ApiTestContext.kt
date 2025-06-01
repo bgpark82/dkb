@@ -1,4 +1,4 @@
-package com.bgpark.demo.dkb.api
+package com.bgpark.demo.dkb.api.cucumber
 
 import io.restassured.response.Response
 import org.springframework.stereotype.Component

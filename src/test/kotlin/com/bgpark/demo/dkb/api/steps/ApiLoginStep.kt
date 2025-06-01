@@ -1,7 +1,7 @@
 package com.bgpark.demo.dkb.api.steps
 
-import com.bgpark.demo.dkb.api.ApiTestContext
-import com.bgpark.demo.dkb.api.CucumberSpringConfiguration
+import com.bgpark.demo.dkb.api.cucumber.ApiTestContext
+import com.bgpark.demo.dkb.api.cucumber.CucumberSpringConfiguration
 import com.bgpark.demo.dkb.api.user.UserService
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -11,7 +11,6 @@ import io.restassured.http.ContentType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.stereotype.Component
 import org.springframework.test.context.ContextConfiguration
 
 // Cucumber에서 Step은 @Component 필요없음. Cucumber가 Step을 자동으로 Bean으로 생성
