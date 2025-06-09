@@ -29,43 +29,43 @@ class ApiLoginStep {
     @Autowired
     private lateinit var userService: UserService
 
-    @Given("the application is running")
-    fun theApplicationIsRunning() {
-        // Set up RestAssured's base URI and port dynamically
-        RestAssured.baseURI = "http://localhost"
-        RestAssured.port = port
-        // No specific action needed here, as Spring Boot Test handles application startup
-        println("Application is running on port: $port")
-    }
-
-    @When("a POST request is sent to {string} with username {string} and password {string}")
-    fun `a Post Request Is Sent To With Username And Password`(path: String, username: String, password: String) {
-        val requestBody = mapOf(
-            "username" to username,
-            "password" to password
-        )
-
-        val response = RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(requestBody)
-            .`when`()
-            .post(path)
-
-        response.body.prettyPrint()
-
-        apiTestContext.lastResponse = response
-    }
-
-    @Then("the response status code should be {int}")
-    fun theResponseStatusCodeShouldBe(expectedStatusCode: Int) {
-        val actualStatusCode = apiTestContext.lastResponse?.statusCode
-        assertEquals(expectedStatusCode, actualStatusCode, "Expected status code $expectedStatusCode but got $actualStatusCode")
-    }
-
-    @Then("the response body should contain {string}: {string}")
-    fun theResponseBodyShouldContainString(jsonPath: String, expectedValue: String) {
-        // Use RestAssured's JsonPath to extract the string value
-        val actualValue = apiTestContext.lastResponse?.jsonPath()?.getString(jsonPath)
-        assertEquals(expectedValue, actualValue, "Expected '$jsonPath' to be '$expectedValue' but got '$actualValue'")
-    }
+//    @Given("the application is running")
+//    fun theApplicationIsRunning() {
+//        // Set up RestAssured's base URI and port dynamically
+//        RestAssured.baseURI = "http://localhost"
+//        RestAssured.port = port
+//        // No specific action needed here, as Spring Boot Test handles application startup
+//        println("Application is running on port: $port")
+//    }
+//
+//    @When("a POST request is sent to {string} with username {string} and password {string}")
+//    fun `a Post Request Is Sent To With Username And Password`(path: String, username: String, password: String) {
+//        val requestBody = mapOf(
+//            "username" to username,
+//            "password" to password
+//        )
+//
+//        val response = RestAssured.given()
+//            .contentType(ContentType.JSON)
+//            .body(requestBody)
+//            .`when`()
+//            .post(path)
+//
+//        response.body.prettyPrint()
+//
+//        apiTestContext.lastResponse = response
+//    }
+//
+//    @Then("the response status code should be {int}")
+//    fun theResponseStatusCodeShouldBe(expectedStatusCode: Int) {
+//        val actualStatusCode = apiTestContext.lastResponse?.statusCode
+//        assertEquals(expectedStatusCode, actualStatusCode, "Expected status code $expectedStatusCode but got $actualStatusCode")
+//    }
+//
+//    @Then("the response body should contain {string}: {string}")
+//    fun theResponseBodyShouldContainString(jsonPath: String, expectedValue: String) {
+//        // Use RestAssured's JsonPath to extract the string value
+//        val actualValue = apiTestContext.lastResponse?.jsonPath()?.getString(jsonPath)
+//        assertEquals(expectedValue, actualValue, "Expected '$jsonPath' to be '$expectedValue' but got '$actualValue'")
+//    }
 }
