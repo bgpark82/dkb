@@ -19,9 +19,6 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 
     id("net.serenity-bdd.serenity-gradle-plugin") version serenityVersion
-
-//    id("net.serenity-bdd.serenity-gradle-plugin") version "4.1.2" // Serenity BDD Gradle Plugin
-
 }
 
 group = "com.bgpark.demo"
@@ -70,6 +67,7 @@ dependencies {
     testImplementation("net.serenity-bdd:serenity-junit5:${serenityVersion}")  // JUnit 5 통합
     testImplementation("net.serenity-bdd:serenity-rest-assured:${serenityVersion}") // RestAssured 통합
     testImplementation("net.serenity-bdd:serenity-cucumber:${serenityVersion}")  // Cucumber 통합
+    testImplementation("net.serenity-bdd:serenity-spring:${serenityVersion}")  // Cucumber 통합
 }
 
 kotlin {

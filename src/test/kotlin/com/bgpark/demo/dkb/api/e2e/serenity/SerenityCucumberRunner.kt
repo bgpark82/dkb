@@ -4,6 +4,7 @@ import io.cucumber.core.options.Constants.GLUE_PROPERTY_NAME
 import org.junit.platform.suite.api.ConfigurationParameter
 import org.junit.platform.suite.api.IncludeEngines
 import org.junit.platform.suite.api.SelectClasspathResource
+import org.junit.platform.suite.api.SelectClasspathResources
 import org.junit.platform.suite.api.Suite
 
 /**
@@ -17,6 +18,8 @@ import org.junit.platform.suite.api.Suite
 * 어떤 feature 파일을 사용할지 지정
 * Suite로 묶을 때 classpath 기반으로 묶음
  */
+//@SelectClasspathResource("features/login.feature")
+//@SelectClasspathResource("features/ScheduleSepaCreditTransferTest.feature")
 @SelectClasspathResource("features/login.feature")
 /**
 * Junit이 어떤 테스트 엔진을 사용하는지 지정

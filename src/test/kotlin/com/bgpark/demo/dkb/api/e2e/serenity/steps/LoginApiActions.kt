@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration
 // GLue 클래스 : 시나리오 파일==feature 파일을 실행할 때 실제 동작을 정의한 클래스
 // @Component가 붙어 있으면 Spring에서도 빈을 스킨하려고해서 충돌발생, Serenity가 생성하도록 놔둬야 함
 // SpringContext안에서 로드 안된다
-@Component
+@ContextConfiguration(classes = [CucumberSpringConfiguration::class])
 class LoginApiActions {
 
     @LocalServerPort
