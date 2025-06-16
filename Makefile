@@ -36,3 +36,14 @@ tunnel:
 
 kubectl-start:
 	kubectl apply -f sepa-credit-transfer-api-deployment.yml
+
+helm-creat:
+	helm create sepa-credit-transfer-api
+
+helm-lint:
+	cd sepa-credit-transfer-api && \
+	helm lint .
+
+helm-install:
+	cd sepa-credit-transfer-api && \
+    helm install my-sepa-app .
