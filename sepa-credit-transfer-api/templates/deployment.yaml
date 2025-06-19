@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-sepa-credit-transfer-api
+  labels:
+    app: service-sepa-credit-transfer-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: service-sepa-credit-transfer-api
+  template:
+    metadata:
+      labels:
+        app: service-sepa-credit-transfer-api
+    spec:
+      containers:
+        - name: service-sepa-credit-transfer-api-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}

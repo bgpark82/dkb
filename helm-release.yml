@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2 # HelmRelease 리소스의 API 버전 (Flux v2 기준)
+kind: HelmRelease                     # 리소스 종류가 HelmRelease임을 나타냅니다.
+metadata:
+  name: sepa-credit-transfer-api      # 이 HelmRelease의 이름입니다. 클러스터 내에서 고유해야 합니다.
+  namespace: default                  # 이 HelmRelease가 배포될 네임스페이스 (필요에 따라 변경)
+spec:
+  interval: 5m                        # Flux가 이 HelmRelease를 Gitops Toolkit 소스와 동기화할 간격입니다.
+  chart:
+    spec:
+      chart: my-sepa-credit-transfer-api # 앞에서 만든 Helm Chart의 이름 (my-sepa-credit-transfer-api 디렉토리)
+      version: "0.1.0"                # Chart.yaml에 정의된 Chart 버전
+      sourceRef:
+        kind: OCIRepository           # Chart 소스 종류 (GitRepository 또는 OCIRepository 등)
+        name: my-charts               # Chart가 저장된 OCIRepository 또는 GitRepository 이름
+        namespace: flux-system        # OCIRepository/GitRepository가 정의된 네임스페이스 (일반적으로 flux-system)
+  releaseName: sepa-api-release       # 이 HelmRelease가 클러스터에 배포할 Helm 릴리스의 이름입니다.
+  targetNamespace: default            # Helm 릴리스가 배포될 타겟 네임스페이스 (Pod, Service 등이 생성될 곳)
+  values:                             # 이 섹션은 Helm Chart의 values.yaml 내용을 그대로 여기에 정의합니다.
+    replicaCount: 1                   # 원본 YAML의 replicas: 1
+    image:
+      repository: bgpark82/sepa-credit-transfer-api
+      tag: "1.0"                      # 원본 YAML의 image 태그
+      pullPolicy: Always              # 원본 YAML의 imagePullPolicy
+
+    service:
+      type: LoadBalancer              # 원본 YAML의 type
+      port: 8080                      # 원본 YAML의 service port
+      targetPort: 8080                # 원본 YAML의 service targetPort

@@ -1,0 +1,14 @@
+###
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "username": "bgpark",
+  "password": "123"
+}
+
+###
+GET http://192.168.49.2:8080/health
+
+###
+GET http://localhost:8080/health

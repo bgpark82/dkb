@@ -1,0 +1,2 @@
+server:
+  port: 0 # Use 0 to assign a random available port for tests
