@@ -12,3 +12,16 @@ GET http://192.168.49.2:8080/health
 
 ###
 GET http://localhost:8080/health
+
+###
+POST http://localhost:8080/tests
+Content-Type: application/json
+
+{
+  "createdAt": "2025-07-03T14:30:00.123456Z",
+  "updatedAt": "2025-07-03T14:30:00.123456Z",
+  "createdAtString": "2025-07-03T14:30:00.123456Z",
+  "updatedAtString": "2025-07-03T14:30:00.123456Z",
+  "createdAtInstant": "2025-07-03T14:30:00.123456Z",
+  "updatedAtInstant": "2025-07-03T14:30:00.123456Z"
+}

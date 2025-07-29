@@ -1,20 +1,20 @@
 package com.bgpark.demo.dkb.processor.service
 
-import com.bgpark.demo.dkb.processor.model.Payment
-import com.bgpark.demo.dkb.processor.model.PaymentRepository
+import com.bgpark.demo.dkb.processor.model.PaymentV1
+import com.bgpark.demo.dkb.processor.model.PaymentRepositoryV1
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
 @Service
 class PaymentService(
-    private val paymentRepository: PaymentRepository
+    private val paymentRepositoryV1: PaymentRepositoryV1
 ) {
 
     @Transactional
     fun save(paymentId: Long) =
-        Payment(id = paymentId, amount = BigDecimal("1000")).run {
+        PaymentV1(id = paymentId, amount = BigDecimal("1000")).run {
             this.completeOrder()
-            paymentRepository.save(this)
+            paymentRepositoryV1.save(this)
     }
 }

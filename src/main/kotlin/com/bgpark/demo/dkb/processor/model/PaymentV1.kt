@@ -11,7 +11,7 @@ import org.springframework.data.domain.DomainEvents
 import java.math.BigDecimal
 
 @Entity
-class Payment(
+class PaymentV1(
 
     @Id
     @GeneratedValue
@@ -21,7 +21,7 @@ class Payment(
 
     var status: String = "CREATED",
 
-) : AbstractAggregateRoot<Payment>() {
+) : AbstractAggregateRoot<PaymentV1>() {
 
     @Transient
     private val domainEvents = mutableListOf<Any>()

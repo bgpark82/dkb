@@ -68,6 +68,8 @@ dependencies {
     testImplementation("net.serenity-bdd:serenity-rest-assured:${serenityVersion}") // RestAssured 통합
     testImplementation("net.serenity-bdd:serenity-cucumber:${serenityVersion}")  // Cucumber 통합
     testImplementation("net.serenity-bdd:serenity-spring:${serenityVersion}")  // Cucumber 통합
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux") //
 }
 
 kotlin {

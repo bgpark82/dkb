@@ -36,15 +36,15 @@ class BulkSepaCreditTransferProcessor(
         println("Start processing")
         val result = (1..10).map {
             asyncTaskExecutor.submit<Int> {
-                println("Thread: ${Thread.currentThread().name}, Number: $it")
+//                println("Thread: ${Thread.currentThread().name}, Number: $it")
                 transactionTemplate.execute<Int> {
                     val amount = BigDecimal.valueOf(Random.nextLong(100))
-                    println("amount=$amount")
+//                    println("amount=$amount")
                     val savedPayment = paymentRepository.save(Payment(amount = amount))
                     savedPayment.amount.intValueExact()
                 }
             }
         }.sumOf { it.get() }
-        println("Complete processing, result=$result")
+//        println("Complete processing, result=$result")
     }
 }
