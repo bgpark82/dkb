@@ -1,0 +1,12 @@
+package com.bgpark.demo.dkb.faud.payment.service.model
+
+enum class InitiationReason(val cd: String) {
+    ADHOC_TRANSFER("ADHOC_TRANSFER"),
+    DATE_TRANSFER("DATE_TRANSFER"),
+
+    MONTHLY("STANDING_ORDER_MONTHLY"),
+    BI_MONTHLY("STANDING_ORDER_BIMONTHLY"),
+    QUARTERLY("STANDING_ORDER_QUARTERLY"),
+    SEMI_ANNUALLY("STANDING_ORDER_SEMIANNUALLY"),
+    ANNUALLY("STANDING_ORDER_YEARLY");
+}
