@@ -1,3 +1,4 @@
 databaseChangeLog:
   - include:
+      # file: src/main/resources/db/changelog/changes/001-create-payment-schema.xml # for liquibase cli
       file: src/main/resources/db/changelog/changes/001-create-payment-schema.xml
