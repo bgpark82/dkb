@@ -1,17 +1,23 @@
 package com.bgpark.demo.dkb.processor.service
 
+import com.bgpark.demo.dkb.processor.domain.Payment
 import com.bgpark.demo.dkb.processor.domain.PaymentRepository
 import com.bgpark.demo.dkb.processor.model.PaymentStatus
 import com.bgpark.demo.dkb.processor.model.PaymentType
 import com.bgpark.demo.dkb.processor.model.ProcessType
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tag
+import io.micrometer.core.instrument.Tags
+import io.micrometer.core.instrument.Timer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.stereotype.Service
 import org.springframework.transaction.support.TransactionTemplate
-import java.util.UUID
-import java.util.concurrent.Callable
-import java.util.concurrent.Future
+import java.math.BigDecimal
+import java.time.Duration
+import java.time.LocalDateTime
+import kotlin.random.Random
 
 @Service
 class BatchProcessor(
@@ -20,6 +26,7 @@ class BatchProcessor(
      */
     private val transactionTemplate: TransactionTemplate,
     private val paymentRepository: PaymentRepository,
+    private val meterRegistry: MeterRegistry,
 ) {
 
     val logger = LoggerFactory.getLogger(BatchProcessor::class.java)!!
@@ -56,55 +63,91 @@ class BatchProcessor(
     ) = (1..batchSize).map {
                 val contextMap = MDC.getCopyOfContextMap()
                 virtualAsyncTaskExecutor.submit<Int> {
+
                     MDC.setContextMap(contextMap)
                     logger.info("Starting process")
                     transactionTemplate.execute<Int> {
-                        logger.info("Starting transaction")
-                        paymentRepository.findNextFromInstantPaymentsByStatusAndPaymentType(
-                            paymentStatus = paymentStatus,
-                            paymentType = paymentType,
-                        )?.let { payment ->
-                            MDC.put("activityId", "activityId-${UUID.randomUUID()}")
-                            val initialStatus = payment.paymentStatus
-                            logger.info("Initial status: $initialStatus")
-                            try {
-                                process()
-                            } catch (e: Exception) {
-                                logger.error("Failed to process payment: ${payment.id} with status ${payment.paymentStatus}", e)
-                            } finally {
-                                paymentRepository.save(payment)
-                                if (initialStatus != payment.paymentStatus && payment.paymentStatus?.isInTerminalStatus() == true) {
-                                    // TODO: metric
-                                    logger.info("record payment processing time for payment: ${payment.id} with status ${payment.paymentStatus}")
-                                }
-                            }
-                            1
-                        } ?: run {
-                            logger.info("No payment found for status ${paymentStatus} and type ${paymentType}")
-                            0
-                        }
+                        processPayment(paymentStatus, paymentType, process)
                     }
                 }
             }.sumOf { it.get() }
 
-
-
-
-/*
     private fun processPayment(
-        processType: ProcessType,
+        paymentStatus: PaymentStatus,
+        paymentType: PaymentType,
+        process: () -> Unit
+    ): Int = paymentRepository.findNextFromInstantPaymentsByStatusAndPaymentType(
+            paymentStatus = paymentStatus,
+            paymentType = paymentType,
+        )?.let { payment ->
+            val initialStatus = payment.paymentStatus
+            logger.info("Initial status: $initialStatus")
+            try {
+                process()
+            } catch (e: Exception) {
+                logger.error("Failed to process payment: ${payment.id} with status ${payment.paymentStatus}", e)
+            } finally {
+                paymentRepository.save(payment)
+                publishMetric(initialStatus, payment, paymentStatus, paymentType)
+            }
+            1
+        } ?: run {
+            logger.info("No payment found for status ${paymentStatus} and type ${paymentType}")
+            0
+        }
+
+    private fun publishMetric(
+        initialStatus: PaymentStatus?,
+        payment: Payment,
         paymentStatus: PaymentStatus,
         paymentType: PaymentType
-    ): Int {
-        val payment = when (processType) {
-            ProcessType.INSTANT -> paymentRepository.findNextFromInstantPaymentsByStatusAndPaymentType(paymentStatus, paymentType)
-            else -> null
-        } ?: run {
-            println("No payment found for status ${paymentStatus} and type ${paymentType}")
-            return 0
+    ) {
+        if (initialStatus != payment.paymentStatus && payment.paymentStatus?.isInTerminalStatus() == true) {
+            logger.info("record payment processing time for payment: ${payment.id} with status ${payment.paymentStatus}")
+            recordProcessTime(
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now(),
+                mfaAuthorizedAt = LocalDateTime.now(),
+                payment = Payment(
+                    id = Random.nextLong(),
+                    paymentStatus = paymentStatus,
+                    paymentType = paymentType,
+                    isInstantPayment = true,
+                    amount = BigDecimal.ONE,
+                    updatedAt = LocalDateTime.now(),
+                )
+            )
         }
-        return 1
     }
-*/
 
+    fun recordProcessTime(
+        createdAt: LocalDateTime,
+        updatedAt: LocalDateTime,
+        mfaAuthorizedAt: LocalDateTime,
+        payment: Payment
+    ) {
+        logger.info("Recording process time for payment: ${payment.id}")
+        val totalProcessDuration = Duration.between(createdAt, updatedAt)
+        val totalBusinessProcessDuration = Duration.between(mfaAuthorizedAt, updatedAt)
+
+        // 카운터 매트릭스 생성
+        val tags = Tags.of(
+            Tag.of("status", payment.paymentStatus?.name ?: "UNKNOWN"),
+            Tag.of("type", payment.paymentType?.name ?: "UNKNOWN"),
+            Tag.of("isInstantPayment", payment.isInstantPayment.toString()),
+        )
+
+        // metric에 tag와 값을 추가
+        meterRegistry.counter("payment.processed", tags).increment()
+
+        meterRegistry.timer("payment.processing.time", tags).record(totalProcessDuration)
+
+        Timer.builder("payment.processing.time.from.mfa.authorized")
+            .tags(tags)
+            .description("Total time taken to process payment starting from creation datetime")
+            .publishPercentileHistogram(true)
+            .publishPercentiles(0.5, 0.95, 0.99)
+            .register(meterRegistry)
+            .record(totalBusinessProcessDuration)
+    }
 }
