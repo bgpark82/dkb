@@ -22,7 +22,7 @@ class Payment(
     val amount: BigDecimal,
 
     @Enumerated(EnumType.STRING)
-    val paymentStatus: PaymentStatus?,
+    var paymentStatus: PaymentStatus?,
 
     @Enumerated(EnumType.STRING)
     val paymentType: PaymentType?,

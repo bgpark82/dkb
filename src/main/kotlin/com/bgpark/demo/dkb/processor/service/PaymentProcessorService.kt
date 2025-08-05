@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service
 @Service
 class PaymentProcessorService(
     val properties: ProcessorConfigurationProperties,
-    val processor: BatchProcessor
+    val batchProcessor: BatchProcessorService,
+    val mfaService: MfaService
 ) {
     private val logger = LoggerFactory.getLogger(PaymentProcessorService::class.java)
 
@@ -25,16 +26,14 @@ class PaymentProcessorService(
     fun processMfaAuthorized() {
         logger.info("Starting mfa authorized instant payment processor")
         val result = with(properties.mfaAuthorized) {
-            processor.process(
+            batchProcessor.process(
                 paymentStatus = PaymentStatus.MFA_AUTHORIZED,
                 paymentType = PaymentType.SINGLE,
                 processType = ProcessType.INSTANT,
                 batchSize = batchSize,
-                process = {  ->
-                    logger.info("Processing payment")
-                    Thread.sleep(1000)
-                }
-            )
+            ) {
+                mfaService.authorize(payment = it)
+            }
         }
         println("Processed $result payments with status ${PaymentStatus.MFA_AUTHORIZED} and type ${PaymentType.SINGLE} using ${ProcessType.INSTANT} processing type.")
     }

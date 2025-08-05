@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 import kotlin.random.Random
 
 @Service
-class BatchProcessor(
+class BatchProcessorService(
     /**
      * @see org.springframework.transaction.support.TransactionTemplate.execute
      */
@@ -29,7 +29,7 @@ class BatchProcessor(
     private val meterRegistry: MeterRegistry,
 ) {
 
-    val logger = LoggerFactory.getLogger(BatchProcessor::class.java)!!
+    val logger = LoggerFactory.getLogger(BatchProcessorService::class.java)!!
     /**
      * @see java.util.concurrent.Executor 인터페이스의 구현체
      * @see org.springframework.core.task.TaskExecutor 구현체, 스레드풀을 관리하고 비동기 작업을 수행
@@ -59,7 +59,7 @@ class BatchProcessor(
         paymentType: PaymentType,
         paymentStatus: PaymentStatus,
         batchSize: Int,
-        process: () -> Unit
+        process: (Payment) -> Unit
     ) = (1..batchSize).map {
                 val contextMap = MDC.getCopyOfContextMap()
                 virtualAsyncTaskExecutor.submit<Int> {
@@ -75,7 +75,7 @@ class BatchProcessor(
     private fun processPayment(
         paymentStatus: PaymentStatus,
         paymentType: PaymentType,
-        process: () -> Unit
+        process: (Payment) -> Unit
     ): Int = paymentRepository.findNextFromInstantPaymentsByStatusAndPaymentType(
             paymentStatus = paymentStatus,
             paymentType = paymentType,
@@ -83,7 +83,7 @@ class BatchProcessor(
             val initialStatus = payment.paymentStatus
             logger.info("Initial status: $initialStatus")
             try {
-                process()
+                process(payment)
             } catch (e: Exception) {
                 logger.error("Failed to process payment: ${payment.id} with status ${payment.paymentStatus}", e)
             } finally {

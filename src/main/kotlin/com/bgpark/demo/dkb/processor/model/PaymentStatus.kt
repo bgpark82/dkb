@@ -5,7 +5,8 @@ enum class PaymentStatus(
     val phase: Phase
 ) {
     ACCEPTED("accepted", Phase.TERMINAL),
-    MFA_AUTHORIZED("mfa-authorized", Phase.INTERMEDIATE)
+    FRAUD_REJECTED("fraud-rejected", Phase.TERMINAL),
+    MFA_AUTHORIZED("mfa-authorized", Phase.INTERMEDIATE),
     ;
 
     enum class Phase {
