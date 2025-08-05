@@ -67,6 +67,19 @@ class BatchProcessorService(
                     MDC.setContextMap(contextMap)
                     logger.info("Starting process")
                     transactionTemplate.execute<Int> {
+                        recordProcessTime(
+                            createdAt = LocalDateTime.now(),
+                            updatedAt = LocalDateTime.now(),
+                            mfaAuthorizedAt = LocalDateTime.now(),
+                            payment = Payment(
+                                id = Random.nextLong(),
+                                paymentStatus = paymentStatus,
+                                paymentType = paymentType,
+                                isInstantPayment = true,
+                                amount = BigDecimal.ONE,
+                                updatedAt = LocalDateTime.now(),
+                            )
+                        )
                         processPayment(paymentStatus, paymentType, process)
                     }
                 }
