@@ -1,5 +1,6 @@
 package com.bgpark.demo.dkb.processor
 
+import com.bgpark.demo.dkb.processor.service.PaymentProcessorService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Component
     havingValue = "true", // 해당 값과 일치할 때만 활성화
     matchIfMissing = true // 프로퍼티가 없을 때도 활성화
 )
-class SepaCreditTransferProcessor {
+class SepaCreditTransferProcessor(
+    private val processorService: PaymentProcessorService
+) {
     init {
         println("${SepaCreditTransferProcessor::class.java.simpleName} created!")
     }
@@ -26,9 +29,6 @@ class SepaCreditTransferProcessor {
         initialDelay = 1000L, // 초기 지연 시간 (1초)
     )
     fun processMfaAuthorizedSepaInstant() {
-        println("Processing MFA authorized SEPA instant payments...")
-        // 여기에 실제 처리 로직을 구현
-        Thread.sleep(10000)
-        println("작업 완료 중")
+        processorService.processMfaAuthorized()
     }
 }

@@ -19,9 +19,23 @@ processor:
   mfa_authorized:
     enabled: true
     fixedRate: PT5S
-    fixedDelay: PT5S
+    # fixedDelay: PT5S
+    batch-size: 5
+    scheduler-delay: PT5S
+    next-to-be-processed-at-delay: PT5S
+    next-to-be-processed-until: PT5S
   name: mfa-processor
   enabled: true
   scheduled:
     fixedDelay: 100
     initialDelay: 100
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
