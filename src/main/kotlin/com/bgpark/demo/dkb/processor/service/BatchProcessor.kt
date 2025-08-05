@@ -54,9 +54,12 @@ class BatchProcessor(
         batchSize: Int,
         process: () -> Unit
     ) = (1..batchSize).map {
+                val contextMap = MDC.getCopyOfContextMap()
                 virtualAsyncTaskExecutor.submit<Int> {
+                    MDC.setContextMap(contextMap)
                     logger.info("Starting process")
                     transactionTemplate.execute<Int> {
+                        logger.info("Starting transaction")
                         paymentRepository.findNextFromInstantPaymentsByStatusAndPaymentType(
                             paymentStatus = paymentStatus,
                             paymentType = paymentType,
@@ -77,7 +80,7 @@ class BatchProcessor(
                             }
                             1
                         } ?: run {
-                            logger.debug("No payment found for status ${paymentStatus} and type ${paymentType}")
+                            logger.info("No payment found for status ${paymentStatus} and type ${paymentType}")
                             0
                         }
                     }

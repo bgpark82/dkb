@@ -1,9 +1,11 @@
 package com.bgpark.demo.dkb.processor
 
 import com.bgpark.demo.dkb.processor.service.PaymentProcessorService
+import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
 // 조건이 맞으면 bean 생성, application.yaml에 따라 결정
@@ -29,6 +31,9 @@ class SepaCreditTransferProcessor(
         initialDelay = 1000L, // 초기 지연 시간 (1초)
     )
     fun processMfaAuthorizedSepaInstant() {
+        MDC.put("activityId", "activityId-${UUID.randomUUID()}")
+        MDC.put("paymentId", "paymentId-${UUID.randomUUID()}")
+        MDC.put("userId", "userId-${UUID.randomUUID()}")
         processorService.processMfaAuthorized()
     }
 }
