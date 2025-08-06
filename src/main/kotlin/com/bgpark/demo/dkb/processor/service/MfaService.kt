@@ -1,5 +1,6 @@
 package com.bgpark.demo.dkb.processor.service
 
+import com.bgpark.demo.dkb.common.i18n.MessageKeys
 import com.bgpark.demo.dkb.processor.domain.Payment
 import com.bgpark.demo.dkb.processor.dto.PaymentEvaluationStatus
 import com.bgpark.demo.dkb.processor.model.PaymentStatus
@@ -23,14 +24,14 @@ class MfaService(
                 } else -> {
                     logger.info("Payment ${payment.id} is not proceedable from fraud service, status: ${response.status}")
                     payment.paymentStatus = PaymentStatus.FRAUD_REJECTED
-                    // TODO: message key
-                }
+                    payment.messageKey = MessageKeys.ExceptionKeys.FRAUD_REJECTED.key
             }
+        }
 
         } catch (e: Exception) {
             logger.info("MFA authorize failed: ${e.message}")
             payment.paymentStatus = PaymentStatus.FRAUD_REJECTED
-            // TODO: message key
+            payment.messageKey = MessageKeys.ExceptionKeys.FRAUD_REJECTED.key
         }
     }
 }

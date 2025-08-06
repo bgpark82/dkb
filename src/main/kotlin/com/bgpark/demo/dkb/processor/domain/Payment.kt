@@ -29,6 +29,9 @@ class Payment(
 
     val isInstantPayment: Boolean? = null,
 
-    val updatedAt: LocalDateTime? = LocalDateTime.now()
+    val updatedAt: LocalDateTime? = LocalDateTime.now(),
+
+    var messageKey: String? = null,
 ) {
+
 }
