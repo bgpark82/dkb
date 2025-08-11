@@ -1,12 +1,9 @@
 # Makefile for Spring Boot (Kotlin/Gradle) and Docker Build
 
-# 변수 정의
-# Docker 이미지 이름. 원하는 이름으로 변경하세요.
-IMAGE_NAME := bgpark82/sepa-credit-transfer-api
-# Docker 이미지 태그. 버전 관리에 유용합니다.
-IMAGE_TAG := 1.0
+IMAGE_NAME ?= bgpark82/sepa-credit-transfer-api
+IMAGE_TAG  ?= 0.0.2
 
-.PHONY: all build push clean
+.PHONY: all build push clean deploy k8s-deploy k8s-delete
 
 # 'all' 타겟: 기본적으로 실행되며, 빌드와 푸시를 순차적으로 수행합니다.
 all: build push
@@ -14,7 +11,7 @@ all: build push
 # 'build' 타겟: Spring Boot 애플리케이션을 빌드하고 Docker 이미지를 생성합니다.
 build:
 	@echo "--- Building Spring Boot JAR ---"
-	./gradlew bootJar -x test
+	./gradlew build -x test
 	@echo "--- Building Docker Image: $(IMAGE_NAME):$(IMAGE_TAG) ---"
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
 
@@ -31,19 +28,9 @@ clean:
 minikube-start:
 	minikube start
 
-tunnel:
-	minikube tunnel
+port-forward:
+	kubectl port-forward service/spring-boot-app-service 8080:8080
 
 kubectl-start:
 	kubectl apply -f sepa-credit-transfer-api-deployment.yml
 
-helm-creat:
-	helm create sepa-credit-transfer-api
-
-helm-lint:
-	cd sepa-credit-transfer-api && \
-	helm lint .
-
-helm-install:
-	cd sepa-credit-transfer-api && \
-    helm install my-sepa-app .

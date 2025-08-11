@@ -36,6 +36,10 @@ repositories {
     mavenCentral()
 }
 
+tasks.jar {
+    enabled = false
+}
+
 dependencies {
     val serenityVersion: String by System.getProperties()
     val cucumberVersion: String by System.getProperties()
