@@ -62,8 +62,36 @@ flux bootstrap github \
   --repository=$GITHUB_REPO \
   --branch=main \
   --path=./clusters/my-cluster \
-  --personal
+  --token=[[gitlab personal access token]]
 ```
+### Flux bootstrap 실행 결과
+```
+Please enter your GitLab personal access token (PAT): 
+► connecting to https://gitlab.com
+► cloning branch "master" from Git repository "https://gitlab.com/bgpark82/dkb.git"
+✔ cloned repository
+► generating component manifests
+✔ generated component manifests
+✔ committed sync manifests to "master" ("4c4f3b42ae3eefbc05f28bc1f80cd78465b47240")
+► pushing component manifests to "https://gitlab.com/bgpark82/dkb.git"
+► installing components in "flux-system" namespace
+✔ installed components
+✔ reconciled components
+► determining if source secret "flux-system/flux-system" exists
+► generating source secret
+✔ public key: 
+✔ configured deploy key "flux-system-master-flux-system-./cluster/my-cluster" for "https://gitlab.com/bgpark82/dkb"
+► applying source secret "flux-system/flux-system"
+✔ reconciled source secret
+► generating sync manifests
+✔ generated sync manifests
+✔ committed sync manifests to "master"
+► pushing sync manifests to "https://gitlab.com/bgpark82/dkb.git"
+► applying sync manifests
+✔ reconciled sync configuration
+◎ waiting for Kustomization "flux-system/flux-system" to be reconciled
+```
+
 
 이 명령어는 다음을 수행합니다.
 1.  지정한 GitHub 리포지토리가 없으면 생성합니다.

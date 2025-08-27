@@ -34,3 +34,7 @@ port-forward:
 kubectl-start:
 	kubectl apply -f sepa-credit-transfer-api-deployment.yml
 
+flux-check:
+	@echo "--- 현재 flux 상태 확인 ---"
+	flux check
+
